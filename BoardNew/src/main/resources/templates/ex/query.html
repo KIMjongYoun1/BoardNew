@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ToDay Song List</title>
+</head>
+<body>
+	<h1>ToDay Song List</h1>
+	<hr>
+	<h2 th:text="*{MyModel.title}"></h2>
+	<h2 th:text="*{MyModel.artist}"></h2>
+	<h2 th:text="*{MyModel.desc}"></h2>
+	
+	<table border="1">
+		<tr>
+			<th>제목</th>
+			<th>작곡가</th>
+			<th>추천이유</th>
+		</tr>
+		<tr th:object="${MyModel}">
+			<td th:text="*{title}"></td>
+			<td th:text="*{artist}"></td>
+			<td th:text="*{desc}"></td>
+		</tr>
+	</talble>
+</body>
+</html>
