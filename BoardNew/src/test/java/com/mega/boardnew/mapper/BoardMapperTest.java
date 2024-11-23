@@ -54,7 +54,7 @@ public class BoardMapperTest {
 	}
 	@Test
 	public void testUpdate() {
-		Long bno = 18L;
+		Long bno = 14L;
 		BoardVO board = new BoardVO();
 		board.setBno(bno);
 		board.setTitle("수정테스트1");

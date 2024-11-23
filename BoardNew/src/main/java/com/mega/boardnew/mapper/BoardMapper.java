@@ -1,4 +1,4 @@
-package com.mega.boardnew.mapper;
+ package com.mega.boardnew.mapper;
 
 import java.util.List;
 

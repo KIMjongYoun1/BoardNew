@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html len="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>List</title>
+</head>
+<body>
+	<a href="/board/write">[[${msg}]]</a>
+	<table border = "1">
+		<tr>
+			<th>No</th>
+			<th>Title</th>
+			<th>Content</th>
+			<th>writer</th>
+			<th>Reg</th>
+			<th>Upd</th>
+		</tr>
+		<th:block th:each="board: ${list}">
+		<tr th:object="${board}">
+			<td th:text="*{bno}"></td>
+			<td th:text="*{title}"></td>
+			<td th:text="*{content}"></td>
+			<td th:text="*{writer}"></td>
+			<td th:text="*{regdate}"></td>
+			<td th:text="*{updatedate}"></td>
+		</tr>
+		</th:block>
+	</table>
+</body>
+ <!--    <script>
+        // 예: 페이지 로드 후 팝업 띄우기
+        window.onload = function() {
+            alert("리스트 페이지에 오신 것을 환영합니다!");
+        };
+    </script> -->
+    
+    <script th:inline="javascript">
+    	var msg = [[${msg}]];
+    	if(msg){
+    		alert(msg);
+    	}
+    </script>
+
+</html>
