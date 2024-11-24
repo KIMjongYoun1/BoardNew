@@ -10,6 +10,7 @@ import com.mega.boardnew.bean.BoardVO;
 public interface BoardMapper {
 	// 게시글 목록
 	public List<BoardVO> getList();
+	public List<BoardVO> getListWithKey(String type, String keyword);
 	
 	// 게시글 추가
 	public int insert(BoardVO vo);
@@ -23,4 +24,6 @@ public interface BoardMapper {
 	
 	//게시글 수정 내용이필요함
 	public int update(BoardVO board);
+
+	//public boolean update(Long bno, String title, String content, String writer);
 }

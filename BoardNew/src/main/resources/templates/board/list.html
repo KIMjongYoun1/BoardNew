@@ -1,31 +1,63 @@
 <!DOCTYPE html>
-<html len="en" xmlns:th="http://www.thymeleaf.org">
+<html leng="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>List</title>
+<!--  <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.css?v=1.0">-->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+	@media (max-width: 918px){
+		.hide{
+			display:none;
+		}
+		.no{
+			width:10%;
+		}
+		.title{ width: 60%;}
+		
+	}
+</style>
+
 </head>
 <body>
-	<a href="/board/write">[[${msg}]]</a>
-	<table border = "1">
-		<tr>
-			<th>No</th>
-			<th>Title</th>
-			<th>Content</th>
-			<th>writer</th>
-			<th>Reg</th>
-			<th>Upd</th>
-		</tr>
-		<th:block th:each="board: ${list}">
-		<tr th:object="${board}">
-			<td th:text="*{bno}"></td>
-			<td th:text="*{title}"></td>
-			<td th:text="*{content}"></td>
-			<td th:text="*{writer}"></td>
-			<td th:text="*{regdate}"></td>
-			<td th:text="*{updatedate}"></td>
-		</tr>
-		</th:block>
-	</table>
+	<div class="col-md-8" style="margin: 0 auto;">
+	<a href="/board/write">글쓰기</a>
+		<table class="table table-dark">
+			<tr>
+				<th class="no">No</th>
+				<th class="title">Title</th>
+				<th class="hide">Content</th>
+				<th class="hide">writer</th>
+				<th class="hide">Reg</th>
+				<th class="hide">Upd</th>
+			</tr>
+			<th:block th:each="board: ${list}">
+			<tr th:object="${board}">
+				<td th:text="*{bno}"></td>
+				<td><a th:text="*{title}" th:href="@{/board/get(bno=*{bno})}"></a></td>
+			<!-- <td th:text="*{title}"></td> -->
+				 <td th:text="*{content}" class="hide"></td>
+				<td th:text="*{writer}"></td>
+				<td th:text="*{regdate}" class="hide"></td>
+				<td th:text="*{updatedate}" class="hide"></td>
+			</tr>
+			</th:block>
+		</table>
+		<br>
+		<form method="get" action="/board/list">
+			<div style="text-align : center">
+				<select name="type">
+					<option value="T">제목</option>
+					<option value="C">내용</option>
+					<option value="W">작성자</option>
+				</select>
+				<input id="keyword" name="keyword" type="text">
+				<input type="submit" value="search">
+			</div> 
+		</form>
+	</div>
 </body>
  <!--    <script>
         // 예: 페이지 로드 후 팝업 띄우기

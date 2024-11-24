@@ -23,6 +23,10 @@ public class BoardDAO {
 		return mapper.getList();
 	}
 	
+	public List<BoardVO> getListWithKey(String type, String keyword){
+		return mapper.getListWithKey(type, keyword);
+	}
+	
 	// 게시글 입력
 	public void register(BoardVO board) {
 		mapper.insertSelectKey(board);
@@ -46,8 +50,8 @@ public class BoardDAO {
 	
 	// 게시글 수정
 	public boolean modify(BoardVO board) {
-		return mapper.update(board) == 1;
+	    return mapper.update(board) == 1; // 수정 성공 여부 반환
 	}
-	
+
 	
 }
