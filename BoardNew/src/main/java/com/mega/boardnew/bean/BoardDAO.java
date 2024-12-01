@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.mega.boardnew.mapper.AttachFileMapper;
 import com.mega.boardnew.mapper.BoardMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,9 @@ public class BoardDAO {
 	@Autowired
 	private BoardMapper mapper;
 	
+	@Autowired
+	private AttachFileMapper fmapper;
+	
 	// 전체 게시글 가져오기
 	public List<BoardVO> getList(){
 		return mapper.getList();
@@ -30,6 +34,16 @@ public class BoardDAO {
 	// 게시글 입력
 	public void register(BoardVO board) {
 		mapper.insertSelectKey(board);
+		
+		if(board.getAttachList() == null || board.getAttachList().size() == 0 ) {
+			return;
+		}
+		else {
+			board.getAttachList().forEach(attach -> {
+				attach.setBno(board.getBno());
+				fmapper.insert(attach);
+			});
+		}
 	}
 	
 	// 게시글 읽기

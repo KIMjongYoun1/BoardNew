@@ -3,6 +3,7 @@
 <configuration>
 	<typeAliases>
 		<typeAlias alias="boardVO" type="com.mega.boardnew.bean.BoardVO"></typeAlias>
+		<typeAlias alias="attachFileVO" type="com.mega.boardnew.bean.AttachFileVO"></typeAlias>
 		<!-- 절대적으로 한줄안에 다써야함  -->
 	</typeAliases>
 </configuration>
