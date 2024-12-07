@@ -67,5 +67,9 @@ public class BoardDAO {
 	    return mapper.update(board) == 1; // 수정 성공 여부 반환
 	}
 
+	// 첨부파일 읽기.
+	public List<AttachFileVO> getAttachList(Long bno){
+		return fmapper.findByBno(bno);
+	}
 	
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,9 +12,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +34,7 @@ import net.coobird.thumbnailator.Thumbnailator;
 
 @Controller
 @Slf4j
-@RequestMapping("/upload")
+@RequestMapping("/upload/*")
 public class UploadController {
 
 	@GetMapping("uploadForm")
@@ -159,5 +166,49 @@ public class UploadController {
 		}
 		return false;
 	}
+
+	/* 첨부 파일 다운로드 */
+	@GetMapping(value = "download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody // 결과가 페이지 이동이 아닌, 데이터 제공
+	public ResponseEntity<Resource> downloadFile(String fileName) {
+		log.info("download file : " + fileName);
+		Resource resource = new FileSystemResource("/Users/ryankim/upload/temp/" + fileName);
+		String resourceName = resource.getFilename();
+		HttpHeaders header = new HttpHeaders();
+
+		try {
+			header.add("Content-Disposition", "attachment; fileName=\""
+					+ new String(resourceName.getBytes(StandardCharsets.UTF_8), "ISO-8859-1") + "\"");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
+	}
+	
+	@GetMapping("/display") // <img src="localhost:10000/upload/display?fileName=***">
+	@ResponseBody
+	public ResponseEntity<byte[]> getFile(String fileName){
+		log.info("file name : " + fileName);
+		
+		ResponseEntity<byte[]> result = null;
+		HttpHeaders header = new HttpHeaders();
+		File file = new File("/Users/ryankim/upload/temp/" + fileName);
+	
+		try {
+			// 헤더에 적절한 파일 타입을 probeContentType을 통해 포함시킴
+			// 예) png파일이면 /img/png, ing/jpeg 타입
+			header.add("Content-Type", Files.probeContentType(file.toPath()));
+			result = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file),
+					header, HttpStatus.OK);
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
 
 }
