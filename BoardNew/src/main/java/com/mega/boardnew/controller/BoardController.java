@@ -141,7 +141,8 @@ public class BoardController {
 		// 게시글의 첨부파일
 		@GetMapping(value="/getAttachList", produces=MediaType.APPLICATION_JSON_VALUE)
 		@ResponseBody
-		public List<AttachFileVO> getAttachList(@RequestParam Long bno){
+		public List<AttachFileVO> getAttachList(Long bno){
+			log.info("getAttachList----------------------");
 			return dao.getAttachList(bno);
 		}
 		

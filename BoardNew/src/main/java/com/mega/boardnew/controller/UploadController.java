@@ -114,7 +114,7 @@ public class UploadController {
 
 				if (checkImageType(saveFile)) {
 					log.info("Image File");
-
+					attachFileVO.setImage(true);
 					// 썸네일 파일 생성 경로 설정
 //			        File thumbnailFile = new File(uploadPath, "s_" + saveFile.getName());
 //
@@ -170,9 +170,9 @@ public class UploadController {
 	/* 첨부 파일 다운로드 */
 	@GetMapping(value = "download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	@ResponseBody // 결과가 페이지 이동이 아닌, 데이터 제공
-	public ResponseEntity<Resource> downloadFile(String fileName) {
-		log.info("download file : " + fileName);
-		Resource resource = new FileSystemResource("/Users/ryankim/upload/temp/" + fileName);
+	public ResponseEntity<Resource> downloadFile(String filename) {
+		log.info("download file : " + filename);
+		Resource resource = new FileSystemResource("/Users/ryankim/upload/temp/" + filename);
 		String resourceName = resource.getFilename();
 		HttpHeaders header = new HttpHeaders();
 
@@ -185,30 +185,26 @@ public class UploadController {
 		}
 		return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/display") // <img src="localhost:10000/upload/display?fileName=***">
 	@ResponseBody
-	public ResponseEntity<byte[]> getFile(String fileName){
-		log.info("file name : " + fileName);
-		
+	public ResponseEntity<byte[]> getFile(String filename) {
+		log.info("file name : " + filename);
+
 		ResponseEntity<byte[]> result = null;
 		HttpHeaders header = new HttpHeaders();
-		File file = new File("/Users/ryankim/upload/temp/" + fileName);
-	
+		File file = new File("/Users/ryankim/upload/temp/" + filename);
+
 		try {
 			// 헤더에 적절한 파일 타입을 probeContentType을 통해 포함시킴
 			// 예) png파일이면 /img/png, ing/jpeg 타입
 			header.add("Content-Type", Files.probeContentType(file.toPath()));
-			result = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file),
-					header, HttpStatus.OK);
-			
-		}
-		catch(Exception e) {
+			result = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
-	
 
 }

@@ -8,13 +8,22 @@
 	<form action="/board/remove" method="post">
 		제목 :<input type="text"  th:field="${board.title}" readonly><br><br>
 		내용 :<input type="text"  th:field="${board.content}" readonly><br><br>
+		<div id="img"></div>
 		저자 :<input type="text"  th:field="${board.writer}" readonly><br><br>
+		
+		<hr>
+		<div class="uploadResult">
+			<h3>첨부파일</h3>
+			<ul></ul>
+		</div>
+		
 		<input type="hidden" name="bno" th:field="${board.bno}">
 		<button type="submit">삭제하기</button>
 		<input type="button" value= "수정하기" onclick="goUpdate()">
 		<a href="/board/list">리스트로 돌아가기</a>
 		</form>
 </body>
+	<script th:src="@{/js/jquery-3.7.1.js}"></script>
     <script th:inline="javascript">
     	var msg = [[${msg}]];
     	if(msg){
@@ -25,6 +34,52 @@
     		let bno = [[${board.getBno()}]];
     		location.href ="/board/modify?bno=" + bno;
     	}
+    	
+    	$(document).ready(function(){
+    	
+    		let bnoValue = [[${board.getBno()}]];
+    		let ul = $(".uploadResult ul");
+    		
+    		$.getJSON("/board/getAttachList", {bno: bnoValue}, function(arr){
+    			console.log(arr);
+    			str="";
+    			
+    		
+    			$(arr).each(function(i, attach){
+    				console.log(attach);
+    				if(!attach.image){ //이미지가 아니면.
+    					str += "<li><img src='/img/attach.png' width='16px'>&nbsp"
+    						+ "<a href='/upload/download?filename=" + attach.uploadPath + "/" + attach.filename + "'>"
+    					    + attach.filename.substring(attach.filename.indexOf("_") + 1)
+    					    + "</a>"
+    						+ "</li>";
+    				}
+    				else { // 이미지 이면. 섬네일을 디스플레이하고, 파일명 클릭시 다운로드, 섬네일 클릭시 원본사진 디스플레이
+    					let fname = attach.uploadPath + "/" + attach.filename;
+    					console.log(fname);
+    					str += "<li><a href='javascript: imgUpdate(\"" + fname + "\")'><img src='/upload/display?filename=" 
+    							+ attach.uploadPath + "/s_" + attach.filename + "' width='32px'></a>&nbsp"
+    							+ attach.filename.substring(attach.filename.indexOf("_") + 1) + "</li>";
+    				}
+    				
+    				console.log(str);
+    			});
+    			
+    			ul.html(str);
+    			
+    		});
+    		
+    		
+    	});
+    	function imgUpdate(fname) {
+    	    let imgstr = "<img src='/upload/display?filename=" + fname + "'>";
+    	    console.log("Generated HTML:", imgstr);
+    	    $("#img").html(imgstr);
+    	}
+
+    	
+	
+    	
     </script>
     
 </html>
